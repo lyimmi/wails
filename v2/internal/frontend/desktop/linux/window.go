@@ -86,12 +86,20 @@ func NewWindow(appoptions *options.App, debug bool, devtools bool) *Window {
 		webviewGpuPolicy = int(appoptions.Linux.WebviewGpuPolicy)
 	}
 
+	var webviewUserDataPath *C.char = nil
+	if appoptions.Linux != nil && appoptions.Linux.WebviewUserDataPath != "" {
+		webviewUserDataPath = C.CString(appoptions.Linux.WebviewUserDataPath)
+		defer C.free(unsafe.Pointer(webviewUserDataPath))
+	}
+
 	webview := C.SetupWebview(
 		result.contentManager,
 		result.asGTKWindow(),
 		bool2Cint(appoptions.HideWindowOnClose),
 		C.int(webviewGpuPolicy),
+		webviewUserDataPath,
 	)
+
 	result.webview = unsafe.Pointer(webview)
 	buttonPressedName := C.CString("button-press-event")
 	defer C.free(unsafe.Pointer(buttonPressedName))

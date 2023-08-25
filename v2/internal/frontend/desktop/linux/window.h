@@ -105,7 +105,7 @@ gboolean Fullscreen(gpointer data);
 gboolean UnFullscreen(gpointer data);
 
 // WebView
-GtkWidget *SetupWebview(void *contentManager, GtkWindow *window, int hideWindowOnClose, int gpuPolicy);
+GtkWidget *SetupWebview(void *contentManager, GtkWindow *window, int hideWindowOnClose, int gpuPolicy, char *webviewUserDataPath);
 void LoadIndex(void *webview, char *url);
 void DevtoolsEnabled(void *webview, int enabled, bool showInspector);
 void ExecuteJS(void *data);

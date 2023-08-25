@@ -30,6 +30,14 @@ type Options struct {
 	//   - WebviewGpuPolicyNever
 	WebviewGpuPolicy WebviewGpuPolicy
 
+	// Path where WebKitGTK stores the user data.
+	//
+	//   - If empty /home/[user name]/.cache/[BinaryName] will be used.
+	//   - If the path is valid the directory is created and the user data will be stored there.
+	//   - If the path is a relative path e.g. "wails/storage" the directories will be created next to the executable.
+	//   - If the path is not valid, caching and storage functionality will not work.
+	WebviewUserDataPath string
+
 	// ProgramName is used to set the program's name for the window manager via GTK's g_set_prgname().
 	//This name should not be localized. [see the docs]
 	//

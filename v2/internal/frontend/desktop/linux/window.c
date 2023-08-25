@@ -410,12 +410,31 @@ gboolean close_button_pressed(GtkWidget *widget, GdkEvent *event, void *data)
 }
 
 // WebView
-GtkWidget *SetupWebview(void *contentManager, GtkWindow *window, int hideWindowOnClose, int gpuPolicy)
+GtkWidget *SetupWebview(void *contentManager, GtkWindow *window, int hideWindowOnClose, int gpuPolicy, char *webviewUserDataPath)
 {
-    GtkWidget *webview = webkit_web_view_new_with_user_content_manager((WebKitUserContentManager *)contentManager);
-    // gtk_container_add(GTK_CONTAINER(window), webview);
-    WebKitWebContext *context = webkit_web_context_get_default();
+    WebKitWebContext *context = NULL;
+    if (webviewUserDataPath == NULL)
+    {
+        context = webkit_web_context_get_default();
+    }
+    else
+    {
+        WebKitWebsiteDataManager *manager = webkit_website_data_manager_new(
+            "base-data-directory", webviewUserDataPath,
+            "base-cache-directory", webviewUserDataPath,
+            NULL);
+        context = webkit_web_context_new_with_website_data_manager(manager);
+        g_object_unref (manager);
+    }
+
     webkit_web_context_register_uri_scheme(context, "wails", (WebKitURISchemeRequestCallback)processURLRequest, NULL, NULL);
+
+    GtkWidget *webview = WEBKIT_WEB_VIEW(g_object_new(WEBKIT_TYPE_WEB_VIEW,
+        "user-content-manager", (WebKitUserContentManager *)contentManager,
+        "web-context", context,
+        NULL
+    ));
+
     g_signal_connect(G_OBJECT(webview), "load-changed", G_CALLBACK(webviewLoadChanged), NULL);
     if (hideWindowOnClose)
     {
