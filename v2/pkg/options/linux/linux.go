@@ -34,7 +34,7 @@ type Options struct {
 	//
 	//   - If empty /home/[user name]/.cache/[BinaryName] will be used.
 	//   - If the path is valid the directory is created and the user data will be stored there.
-	//   - If the path is a relative path e.g. "wails/storage" the directories will be created next to the executable.
+	//   - If the path is a relative path e.g. "wails/storage" the directory will be created where executable was run.
 	//   - If the path is not valid, caching and storage functionality will not work.
 	WebviewUserDataPath string
 
