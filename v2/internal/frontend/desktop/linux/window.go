@@ -91,15 +91,13 @@ func NewWindow(appoptions *options.App, debug bool, devtoolsEnabled bool) *Windo
 	C.SetupInvokeSignal(result.contentManager)
 
 	var (
-		webviewGpuPolicy  int
-		webviewCacheModel int
+		webviewGpuPolicy  = int(linux.WebviewGpuPolicyNever) // workaround for https://github.com/wailsapp/wails/issues/2977
+		webviewCacheModel = int(linux.WebviewCacheModelDefault)
 	)
+
 	if appoptions.Linux != nil {
 		webviewGpuPolicy = int(appoptions.Linux.WebviewGpuPolicy)
 		webviewCacheModel = int(appoptions.Linux.WebviewCacheModel)
-	} else {
-		webviewGpuPolicy = int(linux.WebviewGpuPolicyNever) // workaround for https://github.com/wailsapp/wails/issues/2977
-		webviewCacheModel = int(linux.WebviewCacheModelWebBrowser)
 	}
 
 	webview := C.SetupWebview(
