@@ -497,13 +497,12 @@ static gboolean onDragDrop(GtkWidget* self, GdkDragContext* context, gint x, gin
 }
 
 // WebView
-GtkWidget *SetupWebview(void *contentManager, GtkWindow *window, int hideWindowOnClose, int gpuPolicy, int disableWebViewDragAndDrop, int enableDragAndDrop)
+GtkWidget *SetupWebview(void *contentManager, GtkWindow *window, int hideWindowOnClose, int gpuPolicy, int disableWebViewDragAndDrop, int enableDragAndDrop, int cacheModel)
 {
     GtkWidget *webview = webkit_web_view_new_with_user_content_manager((WebKitUserContentManager *)contentManager);
     // gtk_container_add(GTK_CONTAINER(window), webview);
     WebKitWebContext *context = webkit_web_context_get_default();
     webkit_web_context_register_uri_scheme(context, "wails", (WebKitURISchemeRequestCallback)processURLRequest, NULL, NULL);
-    webkit_web_context_set_cache_model(context, WEBKIT_CACHE_MODEL_DOCUMENT_VIEWER);
     g_signal_connect(G_OBJECT(webview), "load-changed", G_CALLBACK(webviewLoadChanged), NULL);
 
     if(disableWebViewDragAndDrop)
@@ -543,6 +542,22 @@ GtkWidget *SetupWebview(void *contentManager, GtkWindow *window, int hideWindowO
     default:
         webkit_settings_set_hardware_acceleration_policy(settings, WEBKIT_HARDWARE_ACCELERATION_POLICY_ON_DEMAND);
     }
+
+    switch (cacheModel)
+    {
+    case 1:
+        webkit_web_context_set_cache_model(context, WEBKIT_CACHE_MODEL_DOCUMENT_VIEWER);
+        break;
+    case 2:
+        webkit_web_context_set_cache_model(context, WEBKIT_CACHE_MODEL_WEB_BROWSER);
+        break;
+    case 3:
+        webkit_web_context_set_cache_model(context, WEBKIT_CACHE_MODEL_DOCUMENT_BROWSER);
+        break;
+    default:
+        webkit_web_context_set_cache_model(context, WEBKIT_CACHE_MODEL_WEB_BROWSER);
+    }
+
     return webview;
 }
 
@@ -828,4 +843,9 @@ void InstallF12Hotkey(void *window)
     gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
     GClosure *closure = g_cclosure_new(G_CALLBACK(sendShowInspectorMessage), window, NULL);
     gtk_accel_group_connect(accel_group, GDK_KEY_F12, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, closure);
+}
+
+void ClearCache() {
+    WebKitWebContext *context = webkit_web_context_get_default();
+    webkit_web_context_clear_cache(context);
 }

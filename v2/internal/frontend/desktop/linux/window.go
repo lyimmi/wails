@@ -90,12 +90,16 @@ func NewWindow(appoptions *options.App, debug bool, devtoolsEnabled bool) *Windo
 	C.webkit_user_content_manager_register_script_message_handler(result.cWebKitUserContentManager(), external)
 	C.SetupInvokeSignal(result.contentManager)
 
-	var webviewGpuPolicy int
+	var (
+		webviewGpuPolicy  int
+		webviewCacheModel int
+	)
 	if appoptions.Linux != nil {
 		webviewGpuPolicy = int(appoptions.Linux.WebviewGpuPolicy)
+		webviewCacheModel = int(appoptions.Linux.WebviewCacheModel)
 	} else {
-		// workaround for https://github.com/wailsapp/wails/issues/2977
-		webviewGpuPolicy = int(linux.WebviewGpuPolicyNever)
+		webviewGpuPolicy = int(linux.WebviewGpuPolicyNever) // workaround for https://github.com/wailsapp/wails/issues/2977
+		webviewCacheModel = int(linux.WebviewCacheModelWebBrowser)
 	}
 
 	webview := C.SetupWebview(
@@ -105,6 +109,7 @@ func NewWindow(appoptions *options.App, debug bool, devtoolsEnabled bool) *Windo
 		C.int(webviewGpuPolicy),
 		bool2Cint(appoptions.DragAndDrop != nil && appoptions.DragAndDrop.DisableWebViewDrop),
 		bool2Cint(appoptions.DragAndDrop != nil && appoptions.DragAndDrop.EnableFileDrop),
+		C.int(webviewCacheModel),
 	)
 	result.webview = unsafe.Pointer(webview)
 	buttonPressedName := C.CString("button-press-event")

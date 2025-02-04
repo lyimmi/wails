@@ -3,6 +3,9 @@ package linux
 // WebviewGpuPolicy values used for determining the webview's hardware acceleration policy.
 type WebviewGpuPolicy int
 
+// WebviewCacheModel values used for determining the webview's cache model.
+type WebviewCacheModel int
+
 const (
 	// WebviewGpuPolicyAlways Hardware acceleration is always enabled.
 	WebviewGpuPolicyAlways WebviewGpuPolicy = iota
@@ -10,6 +13,22 @@ const (
 	WebviewGpuPolicyOnDemand
 	// WebviewGpuPolicyNever Hardware acceleration is always disabled.
 	WebviewGpuPolicyNever
+)
+
+const (
+	// WebviewCacheModelDefault lets GTK select the default value.
+	WebviewCacheModelDefault = iota
+	// Disable the cache completely, which substantially reduces memory usage.
+	//
+	// WebviewCacheModelDocumentViewer Useful for applications that only access a single local file, with no navigation to other pages.
+	// No remote resources will be cached.
+	WebviewCacheModelDocumentViewer
+	// WebviewCacheModelWebBrowser A cache model optimized for viewing a series of local files -- for example, a documentation viewer or a website designer.
+	//
+	// WebKit will cache a moderate number of resources.
+	WebviewCacheModelWebBrowser
+	// WebviewCacheModelDocumentBrowser Improve document load speed substantially by caching a very large number of resources and previously viewed content.
+	WebviewCacheModelDocumentBrowser
 )
 
 // Options specific to Linux builds
@@ -43,6 +62,9 @@ type Options struct {
 	//
 	//[see the docs]: https://docs.gtk.org/glib/func.set_prgname.html
 	ProgramName string
+
+	// WebviewCacheModel values used for determining the webview's cache model.
+	WebviewCacheModel WebviewCacheModel
 }
 
 type Messages struct {
