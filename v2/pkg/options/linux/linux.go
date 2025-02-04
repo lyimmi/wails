@@ -18,16 +18,16 @@ const (
 const (
 	// WebviewCacheModelDefault lets GTK select the default value.
 	WebviewCacheModelDefault = iota
-	// Disable the cache completely, which substantially reduces memory usage.
+	// WebviewCacheModelDocumentViewerDisable the cache completely, which substantially reduces memory usage.
 	//
-	// WebviewCacheModelDocumentViewer Useful for applications that only access a single local file, with no navigation to other pages.
+	// Useful for applications that only access a single local file, with no navigation to other pages.
 	// No remote resources will be cached.
 	WebviewCacheModelDocumentViewer
-	// WebviewCacheModelWebBrowser A cache model optimized for viewing a series of local files -- for example, a documentation viewer or a website designer.
+	// WebviewCacheModelWebBrowser Improve document load speed substantially by caching a very large number of resources and previously viewed content.
+	WebviewCacheModelWebBrowser
+	// WebviewCacheModelDocumentBrowser A cache model optimized for viewing a series of local files -- for example, a documentation viewer or a website designer.
 	//
 	// WebKit will cache a moderate number of resources.
-	WebviewCacheModelWebBrowser
-	// WebviewCacheModelDocumentBrowser Improve document load speed substantially by caching a very large number of resources and previously viewed content.
 	WebviewCacheModelDocumentBrowser
 )
 
